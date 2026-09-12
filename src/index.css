@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Exact core palette tokens */
+    --color-deep-space: #1D3557;
+    --color-steel-blue: #457B9D;
+    --color-frosted-blue: #A8DADC;
+    --color-honeydew: #F1FAEE;
+    --color-gold: #F4C95D;
+
+    /* Subtle depth shades */
+    --color-bg-darkest: #102038;
+    --color-bg-surface: #162942;
+    --color-steel-dark: #325a75;
+    --color-steel-light: #528fa8;
+  }
+
+  body {
+    background-color: var(--color-deep-space);
+    color: var(--color-honeydew);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    min-height: 100svh;
+    background-image: 
+      radial-gradient(ellipse 90% 60% at 50% -15%, rgba(69, 123, 157, 0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 100% 50%, rgba(168, 218, 220, 0.12) 0%, transparent 60%),
+      radial-gradient(circle at 10% 90%, rgba(16, 32, 56, 0.9) 0%, transparent 70%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-heading {
+    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  #root {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Championship translucent surfaces */
+.champ-card {
+  background: rgba(22, 41, 66, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(168, 218, 220, 0.16);
+  box-shadow: 0 10px 30px -5px rgba(16, 32, 56, 0.6);
+}
+
+.champ-card-elevated {
+  background: rgba(29, 53, 87, 0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(168, 218, 220, 0.28);
+  box-shadow: 0 16px 40px -10px rgba(16, 32, 56, 0.75), 0 0 24px rgba(168, 218, 220, 0.08);
+}
+
+.champ-card-gold {
+  background: linear-gradient(145deg, rgba(34, 55, 84, 0.92) 0%, rgba(22, 41, 66, 0.96) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(244, 201, 93, 0.7);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6), 0 0 35px rgba(244, 201, 93, 0.25);
+}
+
+/* Subtle broadcast scanner lines */
+@keyframes radar-sweep {
+  0% { transform: translateY(-100%); opacity: 0; }
+  25% { opacity: 0.35; }
+  75% { opacity: 0.35; }
+  100% { transform: translateY(1000%); opacity: 0; }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 4.5s ease-in-out infinite;
+}
+
+/* Trophy / Champion shimmer */
+@keyframes gold-shimmer {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(244, 201, 93, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(244, 201, 93, 0.75));
+  }
+}
+
+.glow-champion-gold {
+  animation: gold-shimmer 3s ease-in-out infinite;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(16, 32, 56, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(69, 123, 157, 0.6);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 218, 220, 0.8);
+}
