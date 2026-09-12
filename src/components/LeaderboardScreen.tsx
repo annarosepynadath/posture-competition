@@ -9,6 +9,8 @@ import {
   Play,
   Share2,
   Check,
+  Crown,
+  Medal,
 } from 'lucide-react';
 import type { Player } from '../types';
 import { getPostureBadge } from '../services/postureScorer';
@@ -25,54 +27,57 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   onPlayAgainSame,
   onNewCompetition,
 }) => {
-  // Sort players descending by score
   const sortedPlayers = [...players].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
   const winner = sortedPlayers[0];
+  const second = sortedPlayers.length > 1 ? sortedPlayers[1] : null;
+  const third = sortedPlayers.length > 2 ? sortedPlayers[2] : null;
   const winnerBadge = getPostureBadge(winner?.score ?? 0);
 
   const [expandedPlayerId, setExpandedPlayerId] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Trigger grand celebration confetti and fanfare on mount
+  // Confetti bursts strictly tuned to the core palette
   useEffect(() => {
     soundManager.playChampionshipFanfare();
+
+    const palette = ['#F4C95D', '#A8DADC', '#F1FAEE', '#457B9D'];
 
     // 1. Initial center burst
     confetti({
       particleCount: 120,
       spread: 80,
-      origin: { y: 0.5 },
-      colors: ['#06b6d4', '#f59e0b', '#10b981', '#a855f7', '#ffffff'],
+      origin: { y: 0.4 },
+      colors: palette,
     });
 
-    // 2. Left and right cannons
+    // 2. Dual cannon crossfire
     const timer1 = setTimeout(() => {
       confetti({
         particleCount: 80,
         angle: 60,
         spread: 65,
-        origin: { x: 0, y: 0.65 },
-        colors: ['#f59e0b', '#fbbf24', '#ffffff', '#38bdf8'],
+        origin: { x: 0.05, y: 0.65 },
+        colors: palette,
       });
       confetti({
         particleCount: 80,
         angle: 120,
         spread: 65,
-        origin: { x: 1, y: 0.65 },
-        colors: ['#f59e0b', '#fbbf24', '#ffffff', '#38bdf8'],
+        origin: { x: 0.95, y: 0.65 },
+        colors: palette,
       });
-    }, 400);
+    }, 450);
 
     // 3. Falling gold star shower
     const timer2 = setTimeout(() => {
       confetti({
         particleCount: 60,
-        spread: 100,
+        spread: 110,
         origin: { y: 0.2 },
         shapes: ['star'],
-        colors: ['#fbbf24', '#f59e0b', '#ffffff'],
+        colors: ['#F4C95D', '#F1FAEE'],
       });
-    }, 900);
+    }, 950);
 
     return () => {
       clearTimeout(timer1);
@@ -82,10 +87,10 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
 
   const triggerMoreConfetti = () => {
     confetti({
-      particleCount: 100,
-      spread: 90,
-      origin: { y: 0.6 },
-      colors: ['#06b6d4', '#f59e0b', '#10b981', '#e11d48'],
+      particleCount: 90,
+      spread: 85,
+      origin: { y: 0.55 },
+      colors: ['#F4C95D', '#A8DADC', '#F1FAEE', '#457B9D'],
     });
   };
 
@@ -94,7 +99,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
   };
 
   const handleShare = () => {
-    const text = `🏆 Posture Champion Leaderboard:\n1st: ${winner?.name} (${winner?.score}%)\nCan you beat their posture?`;
+    const text = `🏆 Posture Champion Results:\n1st: ${winner?.name} (${winner?.score}%)\nCan you beat their ergonomic score?`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text);
       setCopiedLink(true);
@@ -102,88 +107,158 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
     }
   };
 
-  const getRankMedal = (index: number) => {
-    switch (index) {
-      case 0:
-        return <span className="text-2xl">🥇</span>;
-      case 1:
-        return <span className="text-2xl">🥈</span>;
-      case 2:
-        return <span className="text-2xl">🥉</span>;
-      default:
-        return (
-          <span className="w-7 h-7 rounded-full bg-slate-800 text-slate-400 font-bold text-xs flex items-center justify-center border border-slate-700">
-            #{index + 1}
-          </span>
-        );
-    }
-  };
-
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8 flex flex-col items-center">
-      {/* Grand Champion Hero Card */}
-      <div className="w-full relative glass-panel-glow p-8 sm:p-10 rounded-3xl text-center flex flex-col items-center mb-10 overflow-hidden animate-in zoom-in-95 duration-700">
-        {/* Background glow effects */}
-        <div className="absolute -top-24 -left-24 w-72 h-72 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Winner Tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/40 text-amber-300 font-black text-xs uppercase tracking-widest mb-4 shadow-lg">
-          <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '6s' }} />
-          OFFICIAL TOURNAMENT WINNER
+    <div className="w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
+      {/* Dramatic Winner Announcement Showcase in Deep Space Blue with Gold Border */}
+      <div className="w-full card-gold p-8 sm:p-12 rounded-3xl text-center flex flex-col items-center mb-12 relative overflow-hidden animate-in zoom-in-95 duration-700">
+        {/* Championship Header Pill in Gold #F4C95D */}
+        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#1D3557] border-2 border-[#F4C95D] text-[#F4C95D] font-black text-xs uppercase tracking-widest mb-4 shadow-xl">
+          <Crown className="w-4 h-4 text-[#F4C95D]" />
+          OFFICIAL TOURNAMENT CHAMPION
         </div>
 
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-500 tracking-tight mb-2 drop-shadow-md">
-          POSTURE CHAMPION 🏆
+        {/* Dramatic Title */}
+        <h1 className="text-4xl sm:text-6xl font-black text-[#F4C95D] font-heading tracking-tight mb-3 drop-shadow-md">
+          🏆 POSTURE CHAMPION
         </h1>
-        <p className="text-slate-300 text-sm sm:text-base max-w-lg mb-6">
-          Supreme ergonomic alignment achieved through real-time MediaPipe AI biomechanics analysis!
-        </p>
 
-        {/* Champion Avatar & Score */}
-        <div className="relative mb-6">
-          <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-500 p-1.5 shadow-2xl shadow-amber-500/40 glow-champion">
-            <div className="w-full h-full bg-slate-950 rounded-[20px] flex items-center justify-center text-6xl sm:text-7xl">
-              {winner?.avatar}
+        {/* Winner Name & Huge Score */}
+        <div className="my-5 flex flex-col items-center">
+          <div className="relative mb-4">
+            <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl bg-[#F4C95D] p-1.5 shadow-2xl glow-champion-gold">
+              <div className="w-full h-full bg-[#1D3557] rounded-[20px] flex items-center justify-center text-6xl sm:text-7xl shadow-inner border border-[#F4C95D]">
+                {winner?.avatar}
+              </div>
             </div>
+            <span className="absolute -top-3.5 -right-3.5 text-4xl transform rotate-12 drop-shadow-lg">
+              👑
+            </span>
           </div>
-          <div className="absolute -top-4 -right-3 text-4xl transform rotate-12 drop-shadow-md">
-            👑
-          </div>
-          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-base shadow-xl border border-yellow-200">
+
+          <h2 className="text-3xl sm:text-5xl font-black text-[#F1FAEE] font-heading tracking-wide uppercase">
+            {winner?.name}
+          </h2>
+
+          <div className="mt-2 text-6xl sm:text-8xl font-black font-mono text-[#F4C95D] tracking-tight drop-shadow-md">
             {winner?.score}%
           </div>
         </div>
 
-        <h2 className="text-3xl font-black text-white mb-2">{winner?.name}</h2>
-        <div className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider mb-2 border ${winnerBadge.badgeClass}`}>
-          {winnerBadge.emoji} {winnerBadge.title}
+        <div className="px-5 py-2 rounded-xl bg-[#F4C95D] text-[#1D3557] font-black text-xs uppercase tracking-widest mb-2.5 shadow-md">
+          {winnerBadge.title}
         </div>
-        <p className="text-xs text-slate-400">{winnerBadge.subtitle}</p>
 
-        {/* Confetti re-trigger button */}
+        <p className="text-xs sm:text-sm font-bold text-[#F1FAEE] max-w-md mb-6 leading-relaxed">
+          &ldquo;{winnerBadge.playfulMessage}&rdquo;
+        </p>
+
         <button
           onClick={triggerMoreConfetti}
-          className="mt-6 px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-amber-300 hover:text-amber-200 text-xs font-bold flex items-center gap-2 transition shadow-md"
+          className="px-5 py-2.5 rounded-xl bg-[#1D3557] hover:bg-[#457B9D] border-2 border-[#F4C95D] text-[#F4C95D] hover:text-[#F1FAEE] text-xs font-black uppercase tracking-wider flex items-center gap-2 transition cursor-pointer shadow-lg"
         >
-          <Sparkles className="w-3.5 h-3.5" />
-          Celebrate More 🎉
+          <Sparkles className="w-3.5 h-3.5 text-[#F4C95D]" />
+          Trigger Victory Confetti 🎉
         </button>
       </div>
 
-      {/* Full Leaderboard Standings Table */}
-      <div className="w-full glass-panel p-6 sm:p-8 rounded-3xl border-slate-800 shadow-xl mb-8">
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-400" />
-            <h3 className="text-lg font-bold text-white">Full Leaderboard Rankings</h3>
+      {/* Real 3-Tier Olympic / Tournament Podium */}
+      {sortedPlayers.length >= 2 && (
+        <div className="w-full mb-12">
+          <div className="text-center mb-6">
+            <span className="text-xs font-black uppercase tracking-widest text-[#A8DADC] block">
+              OFFICIAL TOURNAMENT PODIUM
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-black text-[#F1FAEE] font-heading uppercase">
+              CHAMPIONSHIP PODIUM
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 items-end max-w-2xl mx-auto pt-6">
+            {/* 2nd Place Podium (Left, Silver Tier in Steel Blue #457B9D) */}
+            {second && (
+              <div className="card-steel p-4 rounded-2xl flex flex-col items-center text-center border-t-8 border-t-[#A8DADC] h-64 sm:h-72 justify-between shadow-2xl">
+                <div className="flex flex-col items-center">
+                  <div className="w-8 h-8 rounded-full bg-[#1D3557] border-2 border-[#A8DADC] flex items-center justify-center text-sm font-black text-[#F1FAEE] mb-2">
+                    2
+                  </div>
+                  <div className="text-3xl mb-1">{second.avatar}</div>
+                  <span className="text-xs sm:text-sm font-black text-[#F1FAEE] truncate max-w-[90px] sm:max-w-[120px] uppercase font-heading">
+                    {second.name}
+                  </span>
+                  <span className="text-2xl sm:text-3xl font-black font-mono text-[#F1FAEE] mt-1">
+                    {second.score}%
+                  </span>
+                </div>
+                <div className="w-full py-2 rounded-xl bg-[#1D3557] border-2 border-[#A8DADC] text-xs font-black uppercase tracking-wider text-[#A8DADC]">
+                  2ND PLACE (SILVER)
+                </div>
+              </div>
+            )}
+
+            {/* 1st Place Podium (Center, Elevated & Gold in Gold #F4C95D) */}
+            {winner && (
+              <div className="card-gold p-4 sm:p-5 rounded-2xl flex flex-col items-center text-center border-t-8 border-t-[#F4C95D] h-80 sm:h-92 justify-between scale-105 z-10 shadow-2xl">
+                <div className="flex flex-col items-center">
+                  <div className="text-xs font-black text-[#F4C95D] flex items-center gap-1 uppercase tracking-widest mb-1.5">
+                    <Crown className="w-4 h-4" />
+                    GOLD WINNER
+                  </div>
+                  <div className="text-4xl mb-1">{winner.avatar}</div>
+                  <span className="text-sm sm:text-base font-black text-[#F1FAEE] truncate max-w-[100px] sm:max-w-[140px] uppercase font-heading">
+                    {winner.name}
+                  </span>
+                  <span className="text-3xl sm:text-5xl font-black font-mono text-[#F4C95D] mt-1">
+                    {winner.score}%
+                  </span>
+                </div>
+                <div className="w-full py-2.5 rounded-xl bg-[#F4C95D] text-[#1D3557] text-xs font-black uppercase tracking-wider shadow-xl flex items-center justify-center gap-1">
+                  <Trophy className="w-4 h-4 fill-[#1D3557]" />
+                  1ST PLACE (GOLD)
+                </div>
+              </div>
+            )}
+
+            {/* 3rd Place Podium (Right, Bronze Tier in Steel Blue #457B9D) */}
+            {third ? (
+              <div className="card-steel p-4 rounded-2xl flex flex-col items-center text-center border-t-8 border-t-[#1D3557] h-56 sm:h-64 justify-between shadow-2xl">
+                <div className="flex flex-col items-center">
+                  <div className="w-8 h-8 rounded-full bg-[#1D3557] border-2 border-[#A8DADC]/60 flex items-center justify-center text-sm font-black text-[#F1FAEE] mb-2">
+                    3
+                  </div>
+                  <div className="text-3xl mb-1">{third.avatar}</div>
+                  <span className="text-xs sm:text-sm font-black text-[#F1FAEE] truncate max-w-[90px] sm:max-w-[120px] uppercase font-heading">
+                    {third.name}
+                  </span>
+                  <span className="text-xl sm:text-2xl font-black font-mono text-[#F1FAEE] mt-1">
+                    {third.score}%
+                  </span>
+                </div>
+                <div className="w-full py-2 rounded-xl bg-[#1D3557] border-2 border-[#A8DADC]/50 text-xs font-black uppercase tracking-wider text-[#A8DADC]">
+                  3RD PLACE (BRONZE)
+                </div>
+              </div>
+            ) : (
+              <div className="opacity-0" />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Full Leaderboard Table in Steel Blue Cards */}
+      <div className="w-full card-steel p-6 sm:p-8 rounded-3xl shadow-2xl mb-8">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-[#A8DADC]/40">
+          <div className="flex items-center gap-2.5">
+            <Medal className="w-5 h-5 text-[#F1FAEE]" />
+            <h3 className="text-lg font-black uppercase tracking-wider text-[#F1FAEE]">
+              Full Leaderboard Telemetry
+            </h3>
           </div>
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1D3557] hover:bg-[#1D3557]/80 text-[#F1FAEE] border-2 border-[#A8DADC] text-xs font-black uppercase tracking-wider transition cursor-pointer shadow-md"
           >
-            {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
-            {copiedLink ? 'Copied!' : 'Share'}
+            {copiedLink ? <Check className="w-3.5 h-3.5 text-[#A8DADC]" /> : <Share2 className="w-3.5 h-3.5 text-[#F1FAEE]" />}
+            {copiedLink ? 'Copied!' : 'Share Results'}
           </button>
         </div>
 
@@ -196,10 +271,10 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
             return (
               <div
                 key={player.id}
-                className={`rounded-2xl transition-all border ${
+                className={`rounded-2xl transition-all border-2 ${
                   isWinner
-                    ? 'bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border-amber-500/40 shadow-lg shadow-amber-500/10'
-                    : 'bg-slate-900/60 hover:bg-slate-900 border-slate-800'
+                    ? 'bg-[#1D3557] border-[#F4C95D] shadow-xl'
+                    : 'bg-[#1D3557] border-[#A8DADC]/50 hover:border-[#F1FAEE]'
                 }`}
               >
                 {/* Main Row */}
@@ -209,66 +284,74 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-8 flex justify-center shrink-0">
-                      {getRankMedal(index)}
+                      {index === 0 ? (
+                        <span className="text-2xl">🥇</span>
+                      ) : index === 1 ? (
+                        <span className="text-2xl">🥈</span>
+                      ) : index === 2 ? (
+                        <span className="text-2xl">🥉</span>
+                      ) : (
+                        <span className="w-7 h-7 rounded-lg bg-[#457B9D] text-[#F1FAEE] font-black text-xs flex items-center justify-center border border-[#A8DADC]">
+                          #{index + 1}
+                        </span>
+                      )}
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-[#457B9D] border-2 border-[#A8DADC] flex items-center justify-center text-2xl shrink-0">
                       {player.avatar}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-white text-sm sm:text-base truncate">
+                        <span className="font-black text-[#F1FAEE] text-base truncate uppercase font-heading">
                           {player.name}
                         </span>
                         {isWinner && (
-                          <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-black uppercase tracking-wider border border-amber-400/30">
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#F4C95D] text-[#1D3557] text-[10px] font-black uppercase tracking-wider">
                             Champion
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-[#A8DADC] font-bold">
                         {getPostureBadge(player.score ?? 0).title}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4 shrink-0">
-                    <div className="text-right">
-                      <span className="text-xl sm:text-2xl font-black font-mono text-white">
-                        {player.score}%
-                      </span>
-                    </div>
+                    <span className={`text-2xl sm:text-3xl font-black font-mono ${isWinner ? 'text-[#F4C95D]' : 'text-[#F1FAEE]'}`}>
+                      {player.score}%
+                    </span>
 
                     <button
                       type="button"
-                      className="p-1 text-slate-400 hover:text-white transition"
+                      className="p-1 text-[#A8DADC] hover:text-[#F1FAEE] transition"
                     >
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
 
                 {/* Expanded Detailed Metrics */}
                 {isExpanded && metrics && (
-                  <div className="px-4 pb-4 pt-2 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-5 gap-2.5 animate-in fade-in duration-200">
-                    <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-center">
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Shoulders</span>
-                      <span className="text-sm font-black text-cyan-400 font-mono">{metrics.shoulderScore}%</span>
+                  <div className="px-4 pb-4 pt-2 border-t-2 border-[#457B9D] grid grid-cols-2 sm:grid-cols-5 gap-2.5 animate-in fade-in duration-200">
+                    <div className="p-2.5 rounded-xl bg-[#457B9D] border border-[#A8DADC] text-center">
+                      <span className="text-[10px] text-[#F1FAEE] uppercase font-black block">Shoulders</span>
+                      <span className="text-sm font-black text-[#A8DADC] font-mono">{metrics.shoulderScore}%</span>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-center">
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Head & Neck</span>
-                      <span className="text-sm font-black text-sky-400 font-mono">{metrics.headScore}%</span>
+                    <div className="p-2.5 rounded-xl bg-[#457B9D] border border-[#A8DADC] text-center">
+                      <span className="text-[10px] text-[#F1FAEE] uppercase font-black block">Head & Neck</span>
+                      <span className="text-sm font-black text-[#A8DADC] font-mono">{metrics.headScore}%</span>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-center">
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Spine/Torso</span>
-                      <span className="text-sm font-black text-indigo-400 font-mono">{metrics.spineScore}%</span>
+                    <div className="p-2.5 rounded-xl bg-[#457B9D] border border-[#A8DADC] text-center">
+                      <span className="text-[10px] text-[#F1FAEE] uppercase font-black block">Spine/Torso</span>
+                      <span className="text-sm font-black text-[#A8DADC] font-mono">{metrics.spineScore}%</span>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-center">
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Hip Balance</span>
-                      <span className="text-sm font-black text-amber-400 font-mono">{metrics.hipScore}%</span>
+                    <div className="p-2.5 rounded-xl bg-[#457B9D] border border-[#A8DADC] text-center">
+                      <span className="text-[10px] text-[#F1FAEE] uppercase font-black block">Hip Balance</span>
+                      <span className="text-sm font-black text-[#A8DADC] font-mono">{metrics.hipScore}%</span>
                     </div>
-                    <div className="col-span-2 sm:col-span-1 p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-center">
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Symmetry</span>
-                      <span className="text-sm font-black text-emerald-400 font-mono">{metrics.symmetryScore}%</span>
+                    <div className="col-span-2 sm:col-span-1 p-2.5 rounded-xl bg-[#457B9D] border border-[#A8DADC] text-center">
+                      <span className="text-[10px] text-[#F1FAEE] uppercase font-black block">Symmetry</span>
+                      <span className="text-sm font-black text-[#A8DADC] font-mono">{metrics.symmetryScore}%</span>
                     </div>
                   </div>
                 )}
@@ -278,22 +361,22 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({
         </div>
       </div>
 
-      {/* Match Restart Actions */}
+      {/* Match Rematch Actions in Frosted Blue and Steel Blue */}
       <div className="w-full flex flex-col sm:flex-row gap-4 justify-center">
         <button
           onClick={onPlayAgainSame}
-          className="flex-1 max-w-md py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-400 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-black text-base shadow-xl shadow-cyan-500/25 flex items-center justify-center gap-2.5 transition-all transform hover:scale-[1.02] cursor-pointer"
+          className="flex-1 max-w-md py-4 px-6 rounded-2xl btn-accent font-black text-base uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-2xl cursor-pointer"
         >
-          <Play className="w-5 h-5 fill-slate-950" />
-          REMATCH (SAME PLAYERS)
+          <Play className="w-5 h-5 fill-[#1D3557]" />
+          <span>REMATCH (SAME PLAYERS)</span>
         </button>
 
         <button
           onClick={onNewCompetition}
-          className="py-4 px-6 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-base border border-slate-800 flex items-center justify-center gap-2 transition"
+          className="py-4 px-6 rounded-2xl btn-secondary text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg"
         >
-          <RotateCcw className="w-4 h-4" />
-          NEW TOURNAMENT SETUP
+          <RotateCcw className="w-4 h-4 text-[#A8DADC]" />
+          <span>NEW TOURNAMENT SETUP</span>
         </button>
       </div>
     </div>

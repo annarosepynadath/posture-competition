@@ -236,44 +236,49 @@ export function getPostureBadge(score: number) {
   if (score >= 93) {
     return {
       title: 'Posture Royalty',
-      subtitle: 'Flawless Ergonomic Form',
+      subtitle: 'Flawless Ergonomic Alignment',
+      playfulMessage: 'Unshakable spine! You look like you were sculpted by ergonomic gods.',
       emoji: '👑',
-      badgeClass: 'from-amber-400 to-yellow-500 text-slate-950 border-amber-300',
-      textColor: 'text-amber-400',
+      badgeClass: 'bg-[#F4C95D] text-[#1D3557] border-2 border-[#F4C95D] shadow-lg',
+      textColor: 'text-[#F4C95D]',
     };
   }
   if (score >= 85) {
     return {
       title: 'Spine Warrior',
-      subtitle: 'Superior Alignment & Strength',
+      subtitle: 'Elite Core Balance & Form',
+      playfulMessage: 'Rock-solid form! That spine could double as an architectural pillar.',
       emoji: '🥋',
-      badgeClass: 'from-emerald-400 to-teal-500 text-slate-950 border-emerald-300',
-      textColor: 'text-emerald-400',
+      badgeClass: 'bg-[#A8DADC] text-[#1D3557] border-2 border-[#F1FAEE] shadow-md',
+      textColor: 'text-[#A8DADC]',
     };
   }
   if (score >= 75) {
     return {
       title: 'Ergo Champion',
       subtitle: 'Solid Natural Balance',
+      playfulMessage: 'Great poise and shoulder symmetry. Solid competitor energy!',
       emoji: '🧘',
-      badgeClass: 'from-cyan-400 to-blue-500 text-slate-950 border-cyan-300',
-      textColor: 'text-cyan-400',
+      badgeClass: 'bg-[#457B9D] text-[#F1FAEE] border-2 border-[#A8DADC] shadow-sm',
+      textColor: 'text-[#A8DADC]',
     };
   }
   if (score >= 60) {
     return {
       title: 'Steady Stander',
       subtitle: 'Decent Form with Room to Rise',
+      playfulMessage: 'Good effort! Roll those shoulders back an inch and you are on the podium.',
       emoji: '🌱',
-      badgeClass: 'from-purple-400 to-indigo-500 text-slate-950 border-purple-300',
-      textColor: 'text-purple-400',
+      badgeClass: 'bg-[#1D3557] text-[#A8DADC] border-2 border-[#457B9D]',
+      textColor: 'text-[#A8DADC]',
     };
   }
   return {
     title: 'Slouch Detective',
-    subtitle: 'Time to Stretch & Align',
+    subtitle: 'Time to Stretch & Realign',
+    playfulMessage: 'Gravity won this round! Chin up, chest forward, and take revenge next match.',
     emoji: '🕵️',
-    badgeClass: 'from-rose-400 to-pink-500 text-slate-950 border-rose-300',
-    textColor: 'text-rose-400',
+    badgeClass: 'bg-[#1D3557] text-[#F1FAEE] border-2 border-[#457B9D]',
+    textColor: 'text-[#F1FAEE]',
   };
 }

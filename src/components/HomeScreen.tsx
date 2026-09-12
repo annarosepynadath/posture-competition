@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Users, Play, Sparkles, CheckCircle2, Video, CameraOff, AlertTriangle } from 'lucide-react';
+import { Users, Play, Video, CameraOff, CheckCircle2, AlertCircle, Trophy, Swords } from 'lucide-react';
 import type { Player, Landmark } from '../types';
 import { initializePoseLandmarker, drawPoseOnCanvas } from '../services/poseLandmarker';
 import { calculatePostureScore } from '../services/postureScorer';
@@ -11,6 +11,19 @@ interface HomeScreenProps {
 }
 
 const AVATAR_EMOJIS = ['🦁', '🦊', '🐼', '🦅', '🐺', '🐯', '🦄', '🐨', '🐬', '🦉'];
+
+interface TournamentPreset {
+  label: string;
+  count: number;
+  sub: string;
+}
+
+const TOURNAMENT_PRESETS: TournamentPreset[] = [
+  { label: '2P DUEL', count: 2, sub: 'Head-to-Head' },
+  { label: '4P SQUAD', count: 4, sub: 'Party Battle' },
+  { label: '8P BRACKET', count: 8, sub: 'Full Tournament' },
+  { label: '10P ROYALE', count: 10, sub: 'Grand Championship' },
+];
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onStartGame,
@@ -31,7 +44,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     'Player 10',
   ]);
 
-  // Webcam test state
   const [isPreviewActive, setIsPreviewActive] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [isPersonDetected, setIsPersonDetected] = useState(false);
@@ -54,7 +66,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     setPlayerNames(updated);
   };
 
-  // Start preview camera
   const startCameraPreview = async () => {
     try {
       setIsAiLoading(true);
@@ -70,12 +81,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       }
 
       setIsPreviewActive(true);
-
-      // Initialize pose landmarker
       const landmarker = await initializePoseLandmarker();
       setIsAiLoading(false);
 
-      // Detection loop for test preview
       let lastVideoTime = -1;
       const processLoop = () => {
         if (!videoRef.current || !canvasRef.current || videoRef.current.paused || videoRef.current.ended) {
@@ -110,7 +118,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               }
             }
           } catch {
-            // ignore preview frame dropped errors
+            // drop frame silently
           }
         }
 
@@ -163,68 +171,121 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
-      {/* Hero Badge & Title */}
-      <div className="text-center max-w-2xl mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-3">
-          <Sparkles className="w-3.5 h-3.5" />
-          Multiplayer Pass & Play Webcam Battle
+    <div className="w-full max-w-6xl mx-auto px-4 py-8 sm:py-12 flex flex-col items-center">
+      {/* Hero Championship Header */}
+      <div className="text-center max-w-3xl mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-[#457B9D] border-2 border-[#A8DADC] text-[#F1FAEE] text-xs font-black uppercase tracking-widest mb-4 shadow-lg">
+          <Trophy className="w-4 h-4 text-[#F4C95D]" />
+          <span>Esports Championship</span>
+          <span className="w-2 h-2 rounded-full bg-[#A8DADC]" />
+          <span className="text-[#A8DADC]">Webcam Battle Arena</span>
         </div>
 
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none mb-3">
-          Crown the <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-amber-300">Posture Champion</span>
+        <h1 className="text-5xl sm:text-7xl font-black text-[#F1FAEE] tracking-tight font-heading leading-none mb-3 drop-shadow-lg">
+          POSTURE CHAMPION
         </h1>
 
-        <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-          Gather 2 to 10 players around one screen. Each competitor faces a 10-second posture challenge analyzed in real-time by MediaPipe AI biometrics.
+        <p className="text-[#A8DADC] text-base sm:text-xl max-w-xl mx-auto font-bold leading-relaxed">
+          The definitive multiplayer test of ergonomic supremacy. Don&rsquo;t slouch or pay the price.
         </p>
       </div>
 
+      {/* Main Tournament Setup Grid: Noticeable Steel Blue Cards against Deep Space Background */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Game Setup */}
+        {/* Left Column: Match Format & Roster Entry */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="glass-panel p-6 rounded-2xl">
-            {/* Player Count Selector */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-cyan-400" />
-                <h2 className="text-lg font-bold text-white">How many players?</h2>
+          <div className="card-steel p-6 sm:p-8 rounded-3xl">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-5 pb-3 border-b-2 border-[#A8DADC]/40">
+              <div className="flex items-center gap-2.5">
+                <Users className="w-5 h-5 text-[#F1FAEE]" />
+                <h2 className="text-xl font-black text-[#F1FAEE] uppercase tracking-wider font-heading">
+                  Match Roster Setup
+                </h2>
               </div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                2 to 10 players
+              <span className="text-xs font-black px-3.5 py-1.5 rounded-full bg-[#1D3557] text-[#A8DADC] border-2 border-[#A8DADC] uppercase tracking-wider">
+                {playerCount} Players Active
               </span>
             </div>
 
-            {/* Quick buttons */}
-            <div className="grid grid-cols-5 sm:grid-cols-9 gap-2 mb-6">
-              {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  onClick={() => handlePlayerCountChange(num)}
-                  className={`h-11 rounded-xl font-bold text-sm transition-all ${
-                    playerCount === num
-                      ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 scale-105 ring-2 ring-cyan-300'
-                      : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800'
-                  }`}
-                >
-                  {num}
-                </button>
-              ))}
+            {/* Quick Format Presets */}
+            <div className="mb-5">
+              <label className="text-xs font-black text-[#F1FAEE] uppercase tracking-widest block mb-2">
+                Tournament Format Presets
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {TOURNAMENT_PRESETS.map((preset) => {
+                  const isSelected = playerCount === preset.count;
+                  return (
+                    <button
+                      key={preset.count}
+                      type="button"
+                      onClick={() => handlePlayerCountChange(preset.count)}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#A8DADC] border-[#F1FAEE] text-[#1D3557] shadow-lg scale-[1.02]'
+                          : 'bg-[#1D3557] hover:bg-[#1D3557]/80 border-[#A8DADC]/40 text-[#F1FAEE]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-black tracking-wider">
+                          {preset.label}
+                        </span>
+                        {isSelected && <Swords className="w-3.5 h-3.5 text-[#1D3557]" />}
+                      </div>
+                      <span className={`text-[10px] font-bold block mt-0.5 ${isSelected ? 'text-[#1D3557]/80' : 'text-[#A8DADC]'}`}>
+                        {preset.sub}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Player Names Configuration */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-                Player Names & Avatars
+            {/* Numeric Player Stepper (2 to 10) */}
+            <div className="mb-6">
+              <label className="text-xs font-black text-[#F1FAEE] uppercase tracking-widest block mb-2">
+                Custom Player Count (2&ndash;10)
               </label>
+              <div className="grid grid-cols-5 sm:grid-cols-9 gap-2">
+                {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+                  const isCur = playerCount === num;
+                  return (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => handlePlayerCountChange(num)}
+                      className={`h-11 rounded-xl font-black text-sm transition-all cursor-pointer flex items-center justify-center border-2 ${
+                        isCur
+                          ? 'bg-[#A8DADC] border-[#F1FAEE] text-[#1D3557] shadow-md scale-105'
+                          : 'bg-[#1D3557] hover:bg-[#1D3557]/80 border-[#A8DADC]/40 text-[#F1FAEE]'
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Competitor Roster Cards */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-black text-[#F1FAEE] uppercase tracking-widest">
+                  Competitor Seed Registrations
+                </span>
+                <span className="text-xs text-[#A8DADC] font-bold">
+                  Editable Names
+                </span>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-1">
                 {Array.from({ length: playerCount }).map((_, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-900/60 border border-slate-800 focus-within:border-cyan-500/50 transition-colors"
+                    className="flex items-center gap-3 p-2.5 rounded-2xl bg-[#1D3557] border-2 border-[#A8DADC]/50 focus-within:border-[#F1FAEE] transition-all shadow-md"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center text-lg shrink-0 shadow-inner">
+                    <div className="w-10 h-10 rounded-xl bg-[#457B9D] border border-[#A8DADC] flex items-center justify-center text-xl shrink-0 shadow-inner">
                       {AVATAR_EMOJIS[idx % AVATAR_EMOJIS.length]}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -234,10 +295,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         value={playerNames[idx]}
                         onChange={(e) => handleNameChange(idx, e.target.value)}
                         placeholder={`Player ${idx + 1}`}
-                        className="w-full bg-transparent text-sm font-semibold text-white placeholder-slate-500 focus:outline-none"
+                        className="w-full bg-transparent text-sm font-black text-[#F1FAEE] placeholder-[#A8DADC]/60 focus:outline-none"
                       />
-                      <span className="text-[10px] text-slate-500 font-medium">
-                        Player {idx + 1}
+                      <span className="text-[10px] text-[#A8DADC] font-black uppercase tracking-wider">
+                        Seed #{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
                       </span>
                     </div>
                   </div>
@@ -246,23 +307,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </div>
           </div>
 
-          {/* Action Button */}
+          {/* LARGE PROMINENT START COMPETITION BUTTON */}
           <button
             onClick={handleStart}
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-black text-lg tracking-wide shadow-xl shadow-cyan-500/25 flex items-center justify-center gap-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            className="w-full py-5 px-8 rounded-2xl btn-accent font-black text-xl tracking-wider uppercase flex items-center justify-center gap-3 shadow-2xl cursor-pointer"
           >
-            <Play className="w-6 h-6 fill-slate-950" />
-            START COMPETITION ({playerCount} PLAYERS)
+            <Play className="w-6 h-6 fill-[#1D3557]" />
+            <span>START COMPETITION ({playerCount} PLAYERS)</span>
           </button>
         </div>
 
-        {/* Right Column: Camera Test & Live Vision Preview */}
+        {/* Right Column: Camera Calibration Viewport in Steel Blue */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="glass-panel p-6 rounded-2xl border-cyan-500/20">
-            <div className="flex items-center justify-between mb-3">
+          <div className="card-steel p-6 sm:p-7 rounded-3xl">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b-2 border-[#A8DADC]/40">
               <div className="flex items-center gap-2">
-                <Video className="w-4 h-4 text-cyan-400" />
-                <h3 className="text-sm font-bold text-white">Camera & Pose Test</h3>
+                <Video className="w-4 h-4 text-[#F1FAEE]" />
+                <h3 className="text-sm font-black uppercase tracking-wider text-[#F1FAEE]">
+                  Camera Calibration
+                </h3>
               </div>
 
               {!isPreviewActive ? (
@@ -270,7 +333,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   type="button"
                   onClick={startCameraPreview}
                   disabled={isAiLoading}
-                  className="px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                  className="px-4 py-1.5 rounded-xl btn-accent text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
                 >
                   {isAiLoading ? 'Loading AI...' : 'Test Camera'}
                 </button>
@@ -278,16 +341,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <button
                   type="button"
                   onClick={stopCameraPreview}
-                  className="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#1D3557] hover:bg-[#1D3557]/80 text-[#F1FAEE] border-2 border-[#A8DADC] text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <CameraOff className="w-3.5 h-3.5" />
+                  <CameraOff className="w-3.5 h-3.5 text-[#A8DADC]" />
                   Turn Off
                 </button>
               )}
             </div>
 
-            {/* Video Preview Box */}
-            <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center">
+            {/* Calibration Viewport */}
+            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[#1D3557] border-2 border-[#A8DADC] flex items-center justify-center shadow-inner">
+              {/* Corner reticle brackets for telemetry framing */}
+              <div className="absolute top-2.5 left-2.5 w-4 h-4 border-t-2 border-l-2 border-[#A8DADC] pointer-events-none z-10" />
+              <div className="absolute top-2.5 right-2.5 w-4 h-4 border-t-2 border-r-2 border-[#A8DADC] pointer-events-none z-10" />
+              <div className="absolute bottom-2.5 left-2.5 w-4 h-4 border-b-2 border-l-2 border-[#A8DADC] pointer-events-none z-10" />
+              <div className="absolute bottom-2.5 right-2.5 w-4 h-4 border-b-2 border-r-2 border-[#A8DADC] pointer-events-none z-10" />
+
               <video
                 ref={videoRef}
                 playsInline
@@ -306,40 +375,45 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               />
 
               {!isPreviewActive && (
-                <div className="text-center p-6 space-y-2">
-                  <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-slate-500">
-                    <Video className="w-6 h-6" />
+                <div className="text-center p-6 space-y-3 z-0">
+                  <div className="w-14 h-14 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] flex items-center justify-center mx-auto text-[#F1FAEE] shadow-md">
+                    <Video className="w-7 h-7" />
                   </div>
-                  <p className="text-xs text-slate-400">
-                    Test your webcam before starting to ensure smooth tracking.
-                  </p>
+                  <div>
+                    <h4 className="text-sm font-black text-[#F1FAEE] uppercase tracking-wide">
+                      Pre-Match Camera Calibration
+                    </h4>
+                    <p className="text-xs text-[#A8DADC] max-w-xs mt-1 font-bold">
+                      Verify your webcam framing and test the AI pose landmark tracker before entering the tournament.
+                    </p>
+                  </div>
                   <button
                     onClick={startCameraPreview}
                     disabled={isAiLoading}
-                    className="mt-2 text-xs font-bold text-cyan-400 hover:text-cyan-300 underline"
+                    className="mt-1 inline-flex items-center gap-1 text-xs font-black text-[#F1FAEE] hover:text-[#A8DADC] underline cursor-pointer uppercase tracking-wider"
                   >
-                    {isAiLoading ? 'Initializing AI Engine...' : 'Check webcam & framing →'}
+                    {isAiLoading ? 'Initializing MediaPipe AI Engine...' : 'Calibrate Webcam Feed →'}
                   </button>
                 </div>
               )}
 
-              {/* Status overlay on active preview */}
+              {/* Status HUD when camera is active */}
               {isPreviewActive && (
-                <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
                   {isPersonDetected ? (
-                    <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold backdrop-blur-sm">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      Body Tracked
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#1D3557] border-2 border-[#A8DADC] text-[#F1FAEE] text-[11px] font-black uppercase tracking-wider shadow-md">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#A8DADC]" />
+                      Biometrics Locked
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-950/80 border border-amber-500/40 text-amber-300 text-[11px] font-bold backdrop-blur-sm">
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-                      Step into frame
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#1D3557] border-2 border-[#457B9D] text-[#A8DADC] text-[11px] font-black uppercase tracking-wider shadow-md">
+                      <AlertCircle className="w-3.5 h-3.5 text-[#A8DADC]" />
+                      Stand In View
                     </span>
                   )}
 
                   {currentScorePreview !== null && (
-                    <span className="px-2.5 py-1 rounded-md bg-slate-950/80 border border-cyan-500/40 text-cyan-300 text-[11px] font-black backdrop-blur-sm">
+                    <span className="px-3 py-1 rounded-lg bg-[#1D3557] border-2 border-[#A8DADC] text-[#A8DADC] text-[11px] font-mono font-black shadow-md">
                       Live Form: {currentScorePreview}%
                     </span>
                   )}
@@ -347,15 +421,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               )}
             </div>
 
-            <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
-              <span className="text-xs text-slate-400">
-                Need to know how scores work?
+            <div className="mt-4 pt-3 border-t-2 border-[#A8DADC]/40 flex items-center justify-between">
+              <span className="text-xs text-[#F1FAEE] font-black uppercase tracking-wider">
+                Biomechanics Guide
               </span>
               <button
                 onClick={onOpenRules}
-                className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition"
+                className="text-xs font-black text-[#A8DADC] hover:text-[#F1FAEE] underline cursor-pointer uppercase tracking-wider"
               >
-                View Rules & Weights →
+                Rules & Scoring &rarr;
               </button>
             </div>
           </div>

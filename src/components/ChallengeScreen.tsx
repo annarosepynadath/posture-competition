@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Timer, AlertTriangle, Sparkles, Activity, ShieldCheck } from 'lucide-react';
+import { Timer, AlertCircle, Shield, Activity, Crosshair } from 'lucide-react';
 import type { Player, PostureMetrics, Landmark } from '../types';
 import { initializePoseLandmarker, drawPoseOnCanvas } from '../services/poseLandmarker';
 import { calculatePostureScore } from '../services/postureScorer';
@@ -24,7 +24,7 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState<number>(CHALLENGE_DURATION_SECONDS);
   const [currentScore, setCurrentScore] = useState<number>(0);
-  const [liveFeedback, setLiveFeedback] = useState<string>('Aligning with camera...');
+  const [liveFeedback, setLiveFeedback] = useState<string>('Analyzing biomechanics...');
   const [isPersonDetected, setIsPersonDetected] = useState<boolean>(true);
   const [isLoadingCamera, setIsLoadingCamera] = useState<boolean>(true);
 
@@ -33,7 +33,6 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
   const streamRef = useRef<MediaStream | null>(null);
   const animFrameId = useRef<number | null>(null);
 
-  // Store frames for computing average aggregate score
   const samplesRef = useRef<PostureMetrics[]>([]);
   const hasPlayedChimeRef = useRef<boolean>(false);
   const startTimeRef = useRef<number | null>(null);
@@ -58,10 +57,8 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
 
     soundManager.playTurnComplete();
 
-    // Compute average score over the challenge duration
     const validSamples = samplesRef.current;
     if (validSamples.length === 0) {
-      // Out of frame entire turn
       onChallengeCompleteRef.current({
         headScore: 0,
         shoulderScore: 0,
@@ -76,7 +73,6 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
       return;
     }
 
-    // Discard initial 0.5s settling frames if sufficient samples exist
     const scoredSamples = validSamples.length > 15 ? validSamples.slice(10) : validSamples;
 
     const avgHead = Math.round(
@@ -126,7 +122,6 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
       try {
         setIsLoadingCamera(true);
 
-        // 1. Get webcam stream
         const stream = await navigator.mediaDevices.getUserMedia({
           video: {
             width: { ideal: 1280 },
@@ -147,20 +142,17 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
           await videoRef.current.play();
         }
 
-        // 2. Initialize MediaPipe PoseLandmarker
         const landmarker = await initializePoseLandmarker();
         if (isCancelled) return;
 
         setIsLoadingCamera(false);
         startTimeRef.current = performance.now();
 
-        // 3. Vision tracking loop
         let lastVideoTime = -1;
 
         const loop = (currentTime: number) => {
           if (isCancelled) return;
 
-          // Timer calculations
           if (startTimeRef.current !== null) {
             const elapsed = (currentTime - startTimeRef.current) / 1000;
             const remaining = Math.max(0, CHALLENGE_DURATION_SECONDS - elapsed);
@@ -189,7 +181,7 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
                   setIsPersonDetected(metrics.isPersonDetected);
                   if (metrics.isPersonDetected) {
                     setCurrentScore(metrics.overallScore);
-                    setLiveFeedback(metrics.feedback[0] || 'Holding strong posture!');
+                    setLiveFeedback(metrics.feedback[0] || 'Holding solid form!');
                     samplesRef.current.push(metrics);
 
                     if (metrics.overallScore >= 90 && !hasPlayedChimeRef.current) {
@@ -215,7 +207,7 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
                   }
                 }
               } catch {
-                // Drop frame silently
+                // frame drop safety
               }
             }
           }
@@ -246,85 +238,110 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
 
   const progressPercent = Math.min(100, Math.max(0, (timeLeft / CHALLENGE_DURATION_SECONDS) * 100));
 
-  // Score color badge
-  const getScoreColor = (score: number) => {
-    if (score >= 88) return 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10';
-    if (score >= 70) return 'text-amber-400 border-amber-500/40 bg-amber-500/10';
-    return 'text-rose-400 border-rose-500/40 bg-rose-500/10';
-  };
-
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-4 sm:py-6 flex flex-col items-center">
-      {/* Top Status Bar: Player info & 10s Timer */}
-      <div className="w-full glass-panel p-4 rounded-2xl mb-4 flex flex-wrap items-center justify-between gap-4 border-slate-700/80">
-        {/* Competitor banner */}
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-2xl shadow-inner">
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex flex-col items-center">
+      {/* Broadcast Header in Steel Blue #457B9D with Frosted Blue #A8DADC Border */}
+      <div className="w-full card-steel p-3.5 sm:p-4 rounded-2xl mb-3 flex items-center justify-between gap-2 sm:gap-4 shadow-xl">
+        {/* Contender Identification */}
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-12 h-12 rounded-xl bg-[#1D3557] border-2 border-[#A8DADC] flex items-center justify-center text-2xl shrink-0 shadow-inner">
             {player.avatar}
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black text-white">{player.name}</h2>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40">
-                Player {playerIndex + 1}/{totalPlayers}
+              <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#1D3557] text-[#A8DADC] border border-[#A8DADC] shrink-0">
+                PLAYER {playerIndex + 1}/{totalPlayers}
+              </span>
+              <h2 className="text-base sm:text-lg font-black text-[#F1FAEE] truncate font-heading uppercase">
+                {player.name}
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-[11px] text-[#A8DADC] font-bold uppercase tracking-widest flex items-center gap-1">
+                <Activity className="w-3.5 h-3.5 text-[#F1FAEE] animate-pulse" />
+                Live Telemetry Active
               </span>
             </div>
-            <p className="text-xs text-slate-400 flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-              Real-time biomechanics tracking active
-            </p>
           </div>
         </div>
 
-        {/* 10-Second Timer Ring & Counter */}
-        <div className="flex items-center gap-4">
+        {/* Large Digital Countdown Timer HUD */}
+        <div className="flex items-center gap-3 shrink-0">
           <div className="flex flex-col items-end">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-              Time Remaining
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#A8DADC]">
+              Hold Posture
             </span>
-            <span className="text-2xl sm:text-3xl font-black font-mono text-cyan-300">
+            <span className="text-2xl sm:text-4xl font-black font-mono text-[#F1FAEE] leading-none tracking-tight">
               {timeLeft.toFixed(1)}s
             </span>
           </div>
 
-          <div className="relative w-12 h-12 flex items-center justify-center">
+          <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90">
               <circle
-                cx="24"
-                cy="24"
-                r="20"
+                cx="28"
+                cy="28"
+                r="22"
                 stroke="currentColor"
                 strokeWidth="4"
-                className="text-slate-800 fill-none"
+                className="text-[#1D3557] fill-none"
               />
               <circle
-                cx="24"
-                cy="24"
-                r="20"
-                stroke="currentColor"
+                cx="28"
+                cy="28"
+                r="22"
+                stroke="#A8DADC"
                 strokeWidth="4"
-                strokeDasharray="125.6"
-                strokeDashoffset={125.6 - (125.6 * progressPercent) / 100}
+                strokeDasharray="138.2"
+                strokeDashoffset={138.2 - (138.2 * progressPercent) / 100}
                 strokeLinecap="round"
-                className="text-cyan-400 fill-none transition-all duration-100"
+                className="fill-none transition-all duration-100"
               />
             </svg>
-            <Timer className="w-5 h-5 text-cyan-400 absolute" />
+            <Timer className="w-5 h-5 text-[#F1FAEE] absolute" />
           </div>
         </div>
       </div>
 
-      {/* Main Webcam & Overlay Display */}
-      <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[64vh] rounded-3xl overflow-hidden bg-slate-950 border-2 border-cyan-500/30 shadow-2xl shadow-cyan-950/50 flex items-center justify-center">
+      {/* Main Focus: Dominant Webcam Frame with High-Contrast Reticles */}
+      <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[68vh] rounded-3xl overflow-hidden bg-[#1D3557] border-3 border-[#A8DADC] shadow-2xl flex items-center justify-center">
+        {/* Reticles with Coordinates */}
+        <div className="absolute top-3 left-3 flex items-center gap-1 text-[#A8DADC] pointer-events-none z-20 font-black">
+          <div className="w-6 h-6 border-t-3 border-l-3 border-[#A8DADC]" />
+          <span className="text-[10px] font-mono tracking-widest bg-[#1D3557] px-1 py-0.5 rounded">POS_01</span>
+        </div>
+        <div className="absolute top-3 right-3 flex items-center gap-1 text-[#A8DADC] pointer-events-none z-20 font-black">
+          <span className="text-[10px] font-mono tracking-widest bg-[#1D3557] px-1 py-0.5 rounded">CAM_LIVE</span>
+          <div className="w-6 h-6 border-t-3 border-r-3 border-[#A8DADC]" />
+        </div>
+        <div className="absolute bottom-3 left-3 flex items-center gap-1 text-[#A8DADC] pointer-events-none z-20 font-black">
+          <div className="w-6 h-6 border-b-3 border-l-3 border-[#A8DADC]" />
+          <span className="text-[10px] font-mono tracking-widest bg-[#1D3557] px-1 py-0.5 rounded">AI_VISION</span>
+        </div>
+        <div className="absolute bottom-3 right-3 flex items-center gap-1 text-[#A8DADC] pointer-events-none z-20 font-black">
+          <span className="text-[10px] font-mono tracking-widest bg-[#1D3557] px-1 py-0.5 rounded">30_FPS</span>
+          <div className="w-6 h-6 border-b-3 border-r-3 border-[#A8DADC]" />
+        </div>
+
+        {/* Center Target Crosshair */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25 z-10">
+          <Crosshair className="w-24 h-24 text-[#A8DADC]" strokeWidth={1.5} />
+        </div>
+
+        {/* Animated Radar Sweep */}
+        <div className="absolute inset-x-0 h-1 bg-[#A8DADC]/40 pointer-events-none z-15 animate-radar-sweep shadow-[0_0_12px_#A8DADC]" />
+
         {/* Loading Spinner */}
         {isLoadingCamera && (
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-950/90 gap-3">
-            <div className="w-12 h-12 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin" />
-            <p className="text-sm font-bold text-slate-300">Starting Camera & AI Models...</p>
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#1D3557] gap-3">
+            <div className="w-12 h-12 rounded-full border-4 border-[#457B9D] border-t-[#A8DADC] animate-spin" />
+            <p className="text-sm font-black text-[#F1FAEE] uppercase tracking-wider">
+              CALIBRATING BIOMETRIC VISION...
+            </p>
           </div>
         )}
 
-        {/* Mirrored Video Stream */}
+        {/* Mirrored Webcam Video */}
         <video
           ref={videoRef}
           playsInline
@@ -332,7 +349,7 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
           className="absolute inset-0 w-full h-full object-cover transform -scale-x-100"
         />
 
-        {/* Mirrored Canvas Overlay for Pose Landmarks */}
+        {/* Mirrored Canvas Overlay */}
         <canvas
           ref={canvasRef}
           width={1280}
@@ -340,46 +357,42 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
           className="absolute inset-0 w-full h-full object-cover transform -scale-x-100 pointer-events-none z-10"
         />
 
-        {/* Live Score HUD Overlay (Top Right) */}
+        {/* Live Form HUD Gauge in Steel Blue #457B9D (Top Right) */}
         <div className="absolute top-4 right-4 z-20 pointer-events-none">
-          <div
-            className={`px-4 py-2 rounded-2xl backdrop-blur-md border shadow-xl flex items-center gap-3 transition-colors ${getScoreColor(
-              currentScore
-            )}`}
-          >
+          <div className="px-4 py-2 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] shadow-2xl flex items-center gap-3">
             <div>
-              <div className="text-[10px] uppercase font-bold tracking-wider opacity-80">
-                Live Posture
+              <div className="text-[10px] uppercase font-black tracking-widest text-[#F1FAEE]">
+                Live Form Score
               </div>
-              <div className="text-3xl font-black font-mono leading-none">
+              <div className="text-2xl sm:text-4xl font-black font-mono text-[#F1FAEE] leading-none">
                 {isPersonDetected ? `${currentScore}%` : '--'}
               </div>
             </div>
-            <Sparkles className="w-6 h-6 animate-pulse" />
+            <div className="w-3.5 h-3.5 rounded-full bg-[#A8DADC] animate-ping" />
           </div>
         </div>
 
-        {/* Out-of-frame warning alert */}
+        {/* Out-of-frame Alert Notification */}
         {!isPersonDetected && !isLoadingCamera && (
-          <div className="absolute inset-x-4 top-4 z-20 flex justify-center pointer-events-none animate-in fade-in slide-in-from-top-2">
-            <div className="px-4 py-2.5 rounded-xl bg-rose-950/90 border border-rose-500 text-rose-200 text-xs sm:text-sm font-bold flex items-center gap-2 shadow-2xl backdrop-blur-md">
-              <AlertTriangle className="w-4 h-4 text-rose-400 animate-bounce" />
-              <span>Body out of view! Step back so your head and chest are visible.</span>
+          <div className="absolute inset-x-4 top-4 z-20 flex justify-center pointer-events-none animate-in fade-in">
+            <div className="px-4 py-2.5 rounded-xl bg-[#1D3557] border-2 border-[#A8DADC] text-[#F1FAEE] text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 shadow-2xl">
+              <AlertCircle className="w-5 h-5 text-[#A8DADC] animate-bounce" />
+              <span>Step into frame &bull; Position head and shoulders in view</span>
             </div>
           </div>
         )}
 
-        {/* Real-time Dynamic Coaching Feedback Banner (Bottom) */}
+        {/* Dynamic AI Coaching Teleprompter in Deep Space Blue #1D3557 (Bottom Center) */}
         <div className="absolute bottom-4 inset-x-4 z-20 pointer-events-none flex justify-center">
-          <div className="max-w-xl w-full px-4 py-3 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-slate-700/80 shadow-2xl flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/30">
-              <ShieldCheck className="w-4 h-4" />
+          <div className="max-w-lg w-full px-4 py-2.5 rounded-2xl bg-[#1D3557] border-2 border-[#A8DADC] shadow-2xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-[#457B9D] text-[#F1FAEE] flex items-center justify-center shrink-0 border border-[#A8DADC]">
+              <Shield className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
-                Live AI Coaching Tip
+              <span className="text-[10px] uppercase font-black tracking-widest text-[#A8DADC] block">
+                Live AI Coaching Analysis
               </span>
-              <p className="text-xs sm:text-sm font-semibold text-white truncate">
+              <p className="text-xs sm:text-sm font-black text-[#F1FAEE] truncate">
                 {liveFeedback}
               </p>
             </div>
@@ -387,10 +400,10 @@ export const ChallengeScreen: React.FC<ChallengeScreenProps> = ({
         </div>
       </div>
 
-      {/* Challenge Progress Bar */}
-      <div className="w-full mt-4 h-2 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
+      {/* Challenge Time Progress Bar in Frosted Blue */}
+      <div className="w-full mt-3 h-2.5 rounded-full bg-[#1D3557] border-2 border-[#A8DADC] overflow-hidden p-[1px]">
         <div
-          className="h-full bg-gradient-to-r from-cyan-500 via-sky-400 to-amber-400 transition-all duration-100 ease-linear"
+          className="h-full bg-[#A8DADC] transition-all duration-100 ease-linear rounded-full"
           style={{ width: `${100 - progressPercent}%` }}
         />
       </div>

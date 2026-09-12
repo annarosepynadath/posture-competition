@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trophy, Volume2, VolumeX, RotateCcw, Info } from 'lucide-react';
+import { Trophy, Volume2, VolumeX, RotateCcw, Info, Activity } from 'lucide-react';
 import { soundManager } from '../services/audioSynth';
 import type { GameStage } from '../types';
 
@@ -26,65 +26,66 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 py-3.5 transition-all">
+    <header className="w-full border-b-2 border-[#A8DADC] bg-[#1D3557] sticky top-0 z-40 px-4 sm:px-8 py-3.5 shadow-xl">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Brand */}
+        {/* Tournament Brand Crest */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-amber-400 p-[2px] shadow-lg shadow-cyan-500/20">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-amber-400" />
+          <div className="w-11 h-11 rounded-xl bg-[#457B9D] p-[2px] shadow-lg border-2 border-[#A8DADC] flex items-center justify-center">
+            <div className="w-full h-full bg-[#1D3557] rounded-[8px] flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-[#F4C95D] drop-shadow-md" />
             </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold tracking-tight text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-amber-300">
+              <span className="font-black tracking-tight text-xl text-[#F1FAEE] font-heading leading-none">
                 POSTURE CHAMPION
               </span>
-              <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                AI Vision
+              <span className="text-[10px] font-black tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-[#A8DADC] text-[#1D3557]">
+                ARENA
               </span>
             </div>
-            <p className="text-xs text-slate-400 hidden sm:block">
-              Webcam-Powered Biomechanical Battle
+            <p className="text-[11px] text-[#A8DADC] hidden sm:flex items-center gap-1.5 font-bold uppercase tracking-wider mt-0.5">
+              <span className="w-2 h-2 rounded-full bg-[#A8DADC] animate-pulse" />
+              Client-Side Vision AI Tournament
             </p>
           </div>
         </div>
 
-        {/* Turn Progress Badge (if in match) */}
+        {/* Live Match Stage Badge */}
         {stage !== 'setup' && stage !== 'leaderboard' && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 shadow-inner">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            <span className="text-xs font-semibold text-slate-300">
-              Player {currentPlayerIndex + 1} of {totalPlayers}
+          <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#457B9D] border-2 border-[#A8DADC] shadow-md">
+            <Activity className="w-3.5 h-3.5 text-[#F1FAEE] animate-pulse" />
+            <span className="text-xs font-black uppercase tracking-widest text-[#F1FAEE]">
+              ROUND {currentPlayerIndex + 1 < 10 ? `0${currentPlayerIndex + 1}` : currentPlayerIndex + 1} / {totalPlayers < 10 ? `0${totalPlayers}` : totalPlayers}
             </span>
           </div>
         )}
 
-        {/* Header Actions */}
+        {/* Esports Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={onOpenRules}
-            title="Posture Scoring Rules & Tips"
-            className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 transition-colors"
+            title="Tournament Rules & Scoring Guide"
+            className="p-2.5 rounded-xl bg-[#457B9D] hover:bg-[#1D3557] text-[#F1FAEE] border-2 border-[#A8DADC] transition-all cursor-pointer shadow-md"
           >
             <Info className="w-4 h-4" />
           </button>
 
           <button
             onClick={handleToggleMute}
-            title={isMuted ? 'Unmute Sound' : 'Mute Sound'}
-            className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 transition-colors"
+            title={isMuted ? 'Unmute Arena Audio' : 'Mute Arena Audio'}
+            className="p-2.5 rounded-xl bg-[#457B9D] hover:bg-[#1D3557] text-[#F1FAEE] border-2 border-[#A8DADC] transition-all cursor-pointer shadow-md"
           >
-            {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
+            {isMuted ? <VolumeX className="w-4 h-4 text-[#A8DADC]" /> : <Volume2 className="w-4 h-4 text-[#F1FAEE]" />}
           </button>
 
           {stage !== 'setup' && (
             <button
               onClick={onRestart}
-              title="Restart Tournament"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/40 text-slate-300 hover:text-rose-400 border border-slate-800 hover:border-rose-800/60 text-xs font-semibold transition-all"
+              title="Reset Tournament"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#457B9D] hover:bg-[#1D3557] text-[#F1FAEE] border-2 border-[#A8DADC] text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-md"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3.5 h-3.5 text-[#A8DADC]" />
               <span className="hidden sm:inline">Reset</span>
             </button>
           )}

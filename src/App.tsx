@@ -134,7 +134,7 @@ export function App() {
   const currentPlayer = players[currentPlayerIndex];
 
   return (
-    <div className="flex flex-col min-h-screen text-slate-100 font-sans">
+    <div className="flex flex-col min-h-screen text-[#F1FAEE] font-sans selection:bg-[#A8DADC] selection:text-[#1D3557]">
       <Header
         stage={stage}
         currentPlayerIndex={currentPlayerIndex}
@@ -204,10 +204,10 @@ export function App() {
         onClose={() => setCameraError(null)}
       />
 
-      {/* Footer */}
-      <footer className="w-full py-4 text-center text-xs text-slate-500 border-t border-slate-900 bg-slate-950/40">
+      {/* Championship Footer */}
+      <footer className="w-full py-4 text-center text-xs text-[#A8DADC]/60 border-t border-[#A8DADC]/10 bg-[#102038]/60 font-medium">
         <p>
-          Posture Champion &copy; 2026 &bull; Client-Side MediaPipe Vision AI &bull; No Data Leaves Your Browser
+          Posture Champion &bull; Client-Side MediaPipe Vision AI &bull; No Data Leaves Your Browser
         </p>
       </footer>
     </div>

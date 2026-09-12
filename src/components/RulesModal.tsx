@@ -9,108 +9,110 @@ export const RulesModal: React.FC<RulesModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
-      <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl p-6 text-slate-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1D3557]/90 backdrop-blur-md animate-in fade-in">
+      <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-[#1D3557] border-3 border-[#A8DADC] rounded-3xl shadow-2xl p-6 sm:p-8 text-[#F1FAEE]">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition"
+          className="absolute top-4 right-4 p-2 rounded-xl text-[#A8DADC] hover:text-[#F1FAEE] bg-[#457B9D] hover:bg-[#457B9D]/80 transition cursor-pointer border border-[#A8DADC]"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+        <div className="flex items-center gap-3 mb-5 pb-3 border-b-2 border-[#A8DADC]/40">
+          <div className="p-3 rounded-2xl bg-[#457B9D] text-[#F1FAEE] border-2 border-[#A8DADC]">
             <Award className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">How Scoring Works</h2>
-            <p className="text-xs text-slate-400">Authentic Computer Vision Biometrics</p>
+            <h2 className="text-xl font-black text-[#F1FAEE] uppercase tracking-wide font-heading">
+              Tournament Scoring Criteria
+            </h2>
+            <p className="text-xs text-[#A8DADC] font-bold">Measurable Computer Vision Biometrics</p>
           </div>
         </div>
 
-        <p className="text-sm text-slate-300 leading-relaxed mb-4">
-          Posture Champion uses <strong>MediaPipe Pose AI</strong> running 100% in your browser. It calculates 33 anatomical landmarks at 30+ frames per second to grade your posture from 0 to 100%. No fake scores!
+        <p className="text-sm text-[#F1FAEE] leading-relaxed mb-6 font-bold">
+          Posture Champion runs <strong>MediaPipe Pose Vision AI</strong> 100% locally in your browser. It measures 33 anatomical landmarks across 5 key ergonomic factors:
         </p>
 
         <div className="space-y-3 mb-6">
-          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-start gap-3">
-            <div className="text-cyan-400 mt-0.5 font-bold text-sm bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/30">
+          <div className="p-3.5 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] flex items-start gap-3 shadow-md">
+            <div className="text-[#1D3557] font-black text-xs bg-[#A8DADC] px-2.5 py-1 rounded-md shrink-0">
               25%
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Shoulder Levelness</h3>
-              <p className="text-xs text-slate-400">
-                Measures horizontal angle between left and right shoulders. Keep shoulders even without hiking or dropping either side.
+              <h3 className="text-sm font-black text-[#F1FAEE]">Shoulder Levelness</h3>
+              <p className="text-xs text-[#F1FAEE] mt-0.5 font-semibold">
+                Measures horizontal angle between shoulders. Keep both shoulders level and relaxed without hiking.
               </p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-start gap-3">
-            <div className="text-sky-400 mt-0.5 font-bold text-sm bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/30">
+          <div className="p-3.5 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] flex items-start gap-3 shadow-md">
+            <div className="text-[#1D3557] font-black text-xs bg-[#A8DADC] px-2.5 py-1 rounded-md shrink-0">
               25%
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Head & Neck Alignment</h3>
-              <p className="text-xs text-slate-400">
-                Detects lateral ear tilt and horizontal offset from shoulders. Keep chin level and head centered over your chest.
+              <h3 className="text-sm font-black text-[#F1FAEE]">Head & Neck Alignment</h3>
+              <p className="text-xs text-[#F1FAEE] mt-0.5 font-semibold">
+                Evaluates lateral ear tilt and centering directly over your chest without tilting or forward lean.
               </p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-start gap-3">
-            <div className="text-indigo-400 mt-0.5 font-bold text-sm bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/30">
+          <div className="p-3.5 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] flex items-start gap-3 shadow-md">
+            <div className="text-[#1D3557] font-black text-xs bg-[#A8DADC] px-2.5 py-1 rounded-md shrink-0">
               25%
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Torso & Spine Uprightness</h3>
-              <p className="text-xs text-slate-400">
-                Calculates the vector from hips to shoulders against true vertical (90°). Sit tall and avoid leaning sideways.
+              <h3 className="text-sm font-black text-[#F1FAEE]">Spine & Torso Uprightness</h3>
+              <p className="text-xs text-[#F1FAEE] mt-0.5 font-semibold">
+                Calculates the vector from hips to shoulders against vertical (90°). Sit or stand tall without sideways slouch.
               </p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-start gap-3">
-            <div className="text-amber-400 mt-0.5 font-bold text-sm bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+          <div className="p-3.5 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] flex items-start gap-3 shadow-md">
+            <div className="text-[#1D3557] font-black text-xs bg-[#A8DADC] px-2.5 py-1 rounded-md shrink-0">
               15%
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Hip Alignment</h3>
-              <p className="text-xs text-slate-400">
-                Checks horizontal pelvic balance. Ensure weight is distributed symmetrically.
+              <h3 className="text-sm font-black text-[#F1FAEE]">Hip Balance</h3>
+              <p className="text-xs text-[#F1FAEE] mt-0.5 font-semibold">
+                Detects pelvic tilt and ensures equal weight distribution.
               </p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-start gap-3">
-            <div className="text-emerald-400 mt-0.5 font-bold text-sm bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">
+          <div className="p-3.5 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] flex items-start gap-3 shadow-md">
+            <div className="text-[#1D3557] font-black text-xs bg-[#A8DADC] px-2.5 py-1 rounded-md shrink-0">
               10%
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Bilateral Symmetry</h3>
-              <p className="text-xs text-slate-400">
-                Ensures left and right facial and torso distances match without twisting or turning away from the camera.
+              <h3 className="text-sm font-black text-[#F1FAEE]">Bilateral Symmetry</h3>
+              <p className="text-xs text-[#F1FAEE] mt-0.5 font-semibold">
+                Verifies facial and torso distances are balanced symmetrically facing the camera directly.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-gradient-to-br from-cyan-950/40 to-slate-950 border border-cyan-500/20">
-          <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
-            <Crosshair className="w-3.5 h-3.5" />
-            Pro Competition Tips
+        <div className="p-4 rounded-2xl bg-[#457B9D] border-2 border-[#A8DADC] mb-6 shadow-md">
+          <div className="flex items-center gap-2 text-[#F1FAEE] text-xs font-black uppercase tracking-wider mb-1.5">
+            <Crosshair className="w-4 h-4 text-[#A8DADC]" />
+            Competitive Pro Tips
           </div>
-          <ul className="text-xs text-slate-300 space-y-1 list-disc list-inside">
-            <li>Position camera at eye or chest level.</li>
-            <li>Make sure your upper torso and head are well lit.</li>
-            <li>Roll shoulders back and hold steady for the full 10 seconds!</li>
+          <ul className="text-xs text-[#F1FAEE] space-y-1 list-disc list-inside font-bold">
+            <li>Position your webcam at upper-chest or eye level.</li>
+            <li>Roll your shoulder blades gently back and down.</li>
+            <li>Hold steady throughout the entire 10-second timer!</li>
           </ul>
         </div>
 
         <button
           onClick={onClose}
-          className="mt-6 w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/20 transition-all"
+          className="w-full py-4 rounded-2xl btn-accent font-black text-sm uppercase tracking-wider shadow-xl transition cursor-pointer"
         >
-          Got It! Let's Compete
+          Understood &bull; Return to Arena
         </button>
       </div>
     </div>
