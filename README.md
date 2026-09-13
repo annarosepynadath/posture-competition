@@ -1,32 +1,119 @@
-# React + TypeScript + Vite
+<img width="1280" height="640" alt="git (1)" src="https://github.com/user-attachments/assets/8920b256-2ba8-4988-b824-5351134eb4bd" />
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# POSTURE COMPETITION
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Basic Details
+### Team Name: Infinite loop
 
-## Expanding the Oxlint configuration
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### Team Members
+- Team Lead: Afrin Asif - NSS College of Engineering
+- Member 2: Anna Rose Pynadath - NSS College of Engineering
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+### Project Description
+**Posture Champion** is a ridiculous multiplayer competition where players compete to find out who has the best posture.
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Using a webcam and real-time **MediaPipe pose detection**, the application analyzes each player's body alignment and calculates a posture score. After everyone has taken their turn, the players are ranked and one person is crowned the ultimate **Posture Champion**. 🏆
+
+### The Problem (that doesn't exist)
+We realized there is a serious problem in society:
+
+**Nobody knows who among their friends has the best posture.**
+
+People can compete in sports, academics and video games... but what about sitting and standing unnecessarily straight?
+
+This project solves this completely imaginary crisis.
+
+### The Solution (that nobody asked for)
+Posture Champion turns good posture into a full-blown tournament.
+
+Players take turns standing in front of a webcam while computer vision analyzes their posture. The system evaluates body alignment and produces a calculated percentage score.
+
+Once every player has competed, the application generates a leaderboard and crowns the player with the highest score as the **POSTURE CHAMPION**.
+
+Because apparently, this needed to be competitive.
+
+## Technical Details
+### Technologies/Components Used
+For Software:
+- **Language:** TypeScript
+- **Framework:** React
+- **Build Tool:** Vite
+- **Computer Vision:** MediaPipe Pose Landmarker
+- **Web APIs:** Browser Camera API (`getUserMedia`)
+- **Styling:** HTML5 / CSS3
+- **Version Control:** Git & GitHub
+- **Deployment:** Vercel
+
+
+### Implementation
+For Software:
+# Installation
+bash
+npm install
+
+# Run
+npm run dev
+
+### Project Documentation
+For Software:
+
+## 📸 Screenshots
+
+### 1. Home / Match Setup
+
+![Home / Match Setup](screenshots/sc1.png)
+
+*This screen allows users to set up and start a new match.*
+
+### 2. Match in Progress
+
+![Match in Progress](screenshots/sc2.png)
+
+*This screen shows the ongoing match and user interactions.*
+
+### 3. Results Screen
+
+![Results Screen](screenshots/sc3.png)
+
+*This screen displays the final results or outcome.*
+
+
+# Diagrams
+Player_Setup[Player Setup] --> Player_Ready[Player Gets Ready]
+    Player_Ready --> Webcam[Webcam Activation]
+    Webcam --> Pose_Detection[Pose Detection]
+    Pose_Detection --> Posture_Analysis[Posture Analysis]
+    Posture_Analysis --> Score[Posture Score Calculation]
+    Score --> More_Players{More Players?}
+    More_Players -->|Yes| Player_Ready
+    More_Players -->|No| Leaderboard[Final Leaderboard]
+    Leaderboard --> Winner[Winner Selection]
+    Winner --> Champion[🏆 Posture Champion]
+
+
+
+
+### Project Demo
+# Video
+https://drive.google.com/file/d/1J4C7yFknVomz6OtSOWeqobReM5yB_kYb/view?usp=drive_link
+
+
+# Additional Demos
+Live application: https://posture-competition.vercel.app/
+
+## Team Contributions
+## Team Contributions
+
+- **Anna Rose:** Full-stack project development, React frontend, MediaPipe pose detection integration, posture scoring system, and multiplayer competition flow.
+
+- **Afrin Asif:** UI/UX design, visual styling, testing, deployment, documentation, and project presentation.
+
+---
+Made with ❤️ at TinkerHub Useless Projects 
+
+![Static Badge](https://img.shields.io/badge/TinkerHub-24?color=%23000000&link=https%3A%2F%2Fwww.tinkerhub.org%2F)
+![Static Badge](https://img.shields.io/badge/UselessProjects--26-26?link=https%3A%2F%2Ftinkerhub.org%2Fevents%2F1M8ORET9A1%2Fuseless-projects-3.0)
