@@ -65,19 +65,22 @@ For Software:
 
 ### 1. Home / Match Setup
 
-![Home / Match Setup](https://drive.google.com/file/d/1fNHKbGqwnxvFwJwSznUIveUTuo4aVNWF/view?usp=drive_link)
+![Home / Match Setup]
+https://drive.google.com/file/d/1fNHKbGqwnxvFwJwSznUIveUTuo4aVNWF/view?usp=drive_link
 
 *This screen allows users to set up and start a new match.*
 
 ### 2. Match in Progress
 
-![Match in Progress](https://drive.google.com/file/d/1wwVkXWfp1KI85AvA0sacrlcZGvHk5UtL/view?usp=drive_link)
+![Match in Progress]
+https://drive.google.com/file/d/1wwVkXWfp1KI85AvA0sacrlcZGvHk5UtL/view?usp=drive_link
 
 *This screen shows the ongoing match and user interactions.*
 
 ### 3. Results Screen
 
-![Results Screen](https://drive.google.com/file/d/1bG3X0xAcWhR4rEGxt757pQXj13MFYhn6/view?usp=drive_link)
+![Results Screen]
+https://drive.google.com/file/d/1bG3X0xAcWhR4rEGxt757pQXj13MFYhn6/view?usp=drive_link
 
 *This screen displays the final results or outcome.*
 
