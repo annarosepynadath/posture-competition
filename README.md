@@ -2,7 +2,7 @@
 
 
 
-# POSTURE COMPETITION
+# POSTURE CHAMPION
 
 
 ## Basic Details
